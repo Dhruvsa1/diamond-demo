@@ -15,7 +15,7 @@ import {
   faGear,
   faQrcode,
 } from "@fortawesome/free-solid-svg-icons";
-import Settings from "./Settings";
+import Settings, { Scans } from "./Settings";
 import Stats from "./Stats";
 
 function App() {
@@ -25,6 +25,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         {/* Define other Routes here */}
         <Route path="/settings" element={<Settings />} />
+        <Route path="/settings/scans" element={<Scans />} />
+
         <Route path="/stats" element={<Stats />} />
       </Routes>
       <nav className="fixed inset-x-0 bottom-0 bg-white shadow-lg">
