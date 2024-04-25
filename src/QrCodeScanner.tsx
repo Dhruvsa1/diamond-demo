@@ -1,53 +1,48 @@
-// QrCodeScanner.tsx
-const QrCodeScanner = () => {
-  // You can adjust these values to suit your design needs
-  const cornerWidth = "6px"; // This will control the thickness of the corner borders
-  const cornerLength = "25%"; // This is the length of the corner border lines
-  const borderRadius = "30px"; // This is the border-radius for the corners
+import React, { useEffect, useRef, useState } from "react";
+import { BrowserQRCodeReader } from "@zxing/browser";
+
+const QrCodeScanner = ({ onScan }: { onScan: (detected: boolean) => void }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isQrPresent, setIsQrPresent] = useState(false); // Tracks presence of QR code
+
+  const codeReader = new BrowserQRCodeReader();
+
+  const checkScan = () => {
+    if (videoRef.current) {
+      codeReader
+        .decodeFromVideoDevice("", videoRef.current, (result, error) => {
+          if (result) {
+            console.log(`QR Code detected: ${result.getText()}`);
+            setIsQrPresent(true);
+            onScan(true);
+          } else {
+            setIsQrPresent(false);
+            onScan(false);
+            if (error) {
+              console.error(`Scanning error: ${error}`);
+            }
+          }
+        })
+        .catch((err) => {
+          console.error(`Error initializing QR scan: ${err}`);
+        });
+    }
+  };
+
+  useEffect(() => {
+    checkScan();
+    return () => {};
+  }, [onScan]);
 
   return (
-    <div className="relative w-full h-full flex justify-center items-center ">
-      {/* Define corner borders with explicit border width, lengths, and border radius */}
-      <div
-        className="absolute top-0 left-0 border-black "
-        style={{
-          borderLeftWidth: cornerWidth,
-          borderTopWidth: cornerWidth,
-          borderTopLeftRadius: borderRadius,
-          width: cornerLength,
-          height: cornerLength,
-        }}
-      ></div>
-      <div
-        className="absolute top-0 right-0 border-black "
-        style={{
-          borderRightWidth: cornerWidth,
-          borderTopWidth: cornerWidth,
-          borderTopRightRadius: borderRadius,
-          width: cornerLength,
-          height: cornerLength,
-        }}
-      ></div>
-      <div
-        className="absolute bottom-0 left-0 border-black "
-        style={{
-          borderLeftWidth: cornerWidth,
-          borderBottomWidth: cornerWidth,
-          borderBottomLeftRadius: borderRadius,
-          width: cornerLength,
-          height: cornerLength,
-        }}
-      ></div>
-      <div
-        className="absolute bottom-0 right-0 border-black "
-        style={{
-          borderRightWidth: cornerWidth,
-          borderBottomWidth: cornerWidth,
-          borderBottomRightRadius: borderRadius,
-          width: cornerLength,
-          height: cornerLength,
-        }}
-      ></div>
+    <div className="relative w-full h-full flex justify-center items-center">
+      <video
+        ref={videoRef}
+        style={{ width: "100%", height: "auto" }}
+        className="rounded-lg"
+      />
+
+      {isQrPresent ? <p>QR Code Detected</p> : <p>No QR Code Detected</p>}
     </div>
   );
 };
