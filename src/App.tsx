@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Settings, { Scans } from "./Settings";
 import Stats from "./Stats";
+import TylenolDemo from "./TylenolDemo";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/settings/scans" element={<Scans />} />
 
         <Route path="/stats" element={<Stats />} />
+        <Route path="/stats/tylenol" element={<TylenolDemo />} />
       </Routes>
       <nav className="fixed inset-x-0 bottom-0 bg-white shadow-lg">
         <AnimatePresence>
